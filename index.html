@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kondisi Jalan Provinsi</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f9f9f9;
+      padding: 0;
+    }
+    header {
+      background-color: #0d47a1;
+      color: white;
+      padding: 16px;
+      text-align: center;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .container {
+      padding: 10px;
+    }
+    .map-card {
+      background-color: white;
+      border-radius: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+    .map-title {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #333;
+    }
+    #map {
+      height: 300px;
+      border-radius: 20px;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+    .card {
+      background-color: white;
+      border-radius: 20px;
+      padding: 15px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      text-align: center;
+      color: #333;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background-color 0.2s;
+    }
+    .card:hover {
+      background-color: #e3f2fd;
+    }
+    .card i {
+      font-size: 24px;
+      color: #0d47a1;
+    }
+    .card span {
+      font-size: 12px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <i class="fas fa-road"></i>
+    <span>Kondisi Jalan Provinsi</span>
+  </header>
+  <div class="container">
+    <div class="map-card">
+      <div class="map-title">Peta Interaktif Kondisi Jalan Provinsi</div>
+      <div id="map"></div>
+    </div>
+    <div class="card-grid">
+      <div class="card" onclick="updateMap('baik')">
+        <i class="fas fa-check-circle"></i>
+        <div>Jalan Baik</div>
+        <span>1.234 Km</span>
+      </div>
+      <div class="card" onclick="updateMap('sedang')">
+        <i class="fas fa-adjust"></i>
+        <div>Jalan Sedang</div>
+        <span>987 Km</span>
+      </div>
+      <div class="card" onclick="updateMap('rusak-ringan')">
+        <i class="fas fa-exclamation-triangle"></i>
+        <div>Jalan Rusak Ringan</div>
+        <span>456 Km</span>
+      </div>
+      <div class="card" onclick="updateMap('rusak-berat')">
+        <i class="fas fa-times-circle"></i>
+        <div>Jalan Rusak Berat</div>
+        <span>321 Km</span>
+      </div>
+      <div class="card" onclick="updateMap('non-mantap')">
+        <i class="fas fa-minus-circle"></i>
+        <div>Jalan Non Mantap</div>
+        <span>789 Km</span>
+      </div>
+      <div class="card" onclick="updateMap('mantap')">
+        <i class="fas fa-check-double"></i>
+        <div>Jalan Mantap</div>
+        <span>2.345 Km</span>
+      </div>
+      <div class="card" onclick="updateMap('nasional')">
+        <i class="fas fa-globe"></i>
+        <div>Jalan Nasional</div>
+        <span>1.745,92 Km</span>
+      </div>
+      <div class="card" onclick="updateMap('provinsi')">
+        <i class="fas fa-map-marker-alt"></i>
+        <div>Jalan Provinsi</div>
+        <span>2.014,23 Km</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    let map = L.map('map').setView([-4.275, 120.751], 6);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    let currentLayer = null;
+
+    function updateMap(type) {
+      if (currentLayer) {
+        map.removeLayer(currentLayer);
+      }
+
+      if (type === 'baik') {
+        currentLayer = L.marker([-4.1, 120.5]).addTo(map).bindPopup("Jalan Baik");
+      } else if (type === 'sedang') {
+        currentLayer = L.marker([-4.2, 120.7]).addTo(map).bindPopup("Jalan Sedang");
+      } else if (type === 'rusak-ringan') {
+        currentLayer = L.marker([-4.3, 120.3]).addTo(map).bindPopup("Jalan Rusak Ringan");
+      } else if (type === 'rusak-berat') {
+        currentLayer = L.marker([-4.4, 120.6]).addTo(map).bindPopup("Jalan Rusak Berat");
+      } else if (type === 'non-mantap') {
+        currentLayer = L.marker([-4.5, 120.8]).addTo(map).bindPopup("Jalan Non Mantap");
+      } else if (type === 'mantap') {
+        currentLayer = L.marker([-4.1, 120.9]).addTo(map).bindPopup("Jalan Mantap");
+      } else if (type === 'nasional') {
+        currentLayer = L.polyline([
+          [-4.0, 120.2],
+          [-4.3, 120.5]
+        ], {color: 'blue'}).addTo(map).bindPopup("Jalan Nasional");
+      } else if (type === 'provinsi') {
+        currentLayer = L.polygon([
+          [-4.2, 120.2],
+          [-4.3, 120.4],
+          [-4.1, 120.6]
+        ], {color: 'green'}).addTo(map).bindPopup("Jalan Provinsi");
+      }
+    }
+  </script>
+</body>
+</html>
